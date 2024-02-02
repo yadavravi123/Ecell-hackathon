@@ -4,6 +4,10 @@ const genPassword = require('../lib/passwordUtils').genPassword;
 const connection = require('../config/database')
 const User = connection.models.User;
 const Class=connection.models.Class;
+const Students=connection.models.Students;
+const Testing=connection.models.Testing;
+const Teachers=connection.models.Teachers;
+const Subjects=connection.models.Subjects;
 const isAuth=require('./authMiddleware').isAuth;
 const isAdmin=require('./authMiddleware').isAdmin;
 const axios=require("axios");
@@ -16,11 +20,18 @@ const uuid = require('uuid');
  */
 
  // TODO
- router.post('/login',passport.authenticate('local', {
-    successRedirect: '/studentDashboard',
-    failureRedirect: '/login',
-  }),(req,res,next)=>{
-    console.log('kdjfk');
+//  {
+
+//     successRedirect: '/studentDashboard',
+//     failureRedirect: '/login',
+//   }
+ router.post('/login',passport.authenticate('local'),(req,res,next)=>{
+        if(req.user.admin){
+            res.redirect("/teacherDashboard");
+        }
+        else{
+            res.redirect("/studentDashboard");
+        }
   });
 
  // TODO
@@ -71,42 +82,88 @@ const uuid = require('uuid');
 
 router.get("/join/:id",isAuth,async(req,res)=>{
 
-    // const stu_id=req.user._id.toHexString();
-    // const stu_name=req.user.username;
-    // console.log(req.user);
-    // Class.updateOne({"id":req.params.id},{$push:{"student":{"name":stu_name,"id":stu_id}}},{upsert:true}) 
-    // .then((ack)=>{
-    //    console.log(ack);
-    // })
-    // .catch((err)=>{
-    //    console.log(err);
-    // })
+    const stu_id=req.user._id.toHexString();
+    const stu_name=req.user.username;
     console.log(req.user);
-  
-    res.json("ok");
+    Class.updateOne({"id":req.params.id},{$push:{"student":{"name":stu_name,"id":stu_id}}},{upsert:true}) 
+    .then((ack)=>{
+       console.log(ack);
+    })
+    .catch((err)=>{
+       console.log(err);
+    })
+
+    res.json("joined");
    
 })
 
-router.get("/createClass",isAuth,async(req,res)=>{
-    res.render("basicForm.ejs");
+router.get("/createSubject",isAuth,async(req,res)=>{
+    res.render("createSubject.ejs");
 })
+
 // teacher will create a class which will have unique id
 
-router.post("/createClass",isAuth,async(req,res)=>{
+router.post("/createSubject",isAuth,async(req,res)=>{
 
-    const class_name=req.body.class_name;
-    const classId=uuid.v4();
+    const subject_name=req.body.subject_name;
+    const subject_id=uuid.v4();
     const teacherName=req.user.username;
-    console.log('teacher',teacherName);
-    const newClass=new Class({
-        id:classId,
-        class_name:class_name,
+    
+    const Teacher=new Teachers({
         teacher_name:teacherName,
-        student:[],
+        teacher_id:req.user.id,
+        subject_name:subject_name,
+        subject_id:subject_id,
+        students:[]
     })
-    const result=await newClass.save();
+    const ack1= await Teacher.save();
+    console.log(ack1);
+    const Subject=new Subjects({
+        id:subject_id,
+        name:subject_name,
+    })
+    const ack2=await Subject.save();
+    console.log(ack2);
+    res.json("created class");
+
+})
+router.get("/join",isAuth,async(req,res)=>{
+    res.render("joinClass.ejs");
+})
+router.post("/join",isAuth,async(req,res)=>{
+
+    // const classId=req.body.classId;
+    // const stu_name=req.user.username;
+    // const stu_id=req.user._id.toHexString();
+    const subject_id=req.body.subject_id;
+   
+    const ob=await Subjects.findOne({id:subject_id});
+    const subject_name=ob.name;
+    const student_id=req.user._id.toHexString();
+    const student_name=req.user.username;
+
+    const ack=await Students.updateOne({student_id:student_id,student_name:student_name},{$push:{"Subjects":{name:subject_name,id:subject_id}}},{upsert:true});
+    console.log('1',ack);
+    const ack2=await Teachers.updateOne({subject_id:subject_id},{$push:{"students":{name:student_name,id:student_id}}},{upsert:true});
+    console.log('2',ack2);
+    res.json("joined the class");
 })
 
+router.get("/post",async(req,res)=>{
+    res.render("post_log_teach.ejs");
+})
+
+router.get("/testing",async(req,res)=>{
+    
+    const obj={
+        name:"utsav",
+        id:"563"
+    }
+    const filter={teacher_name:"rasool",subject_name:"AI"};
+    const ack=await Teachers.updateOne(filter,{$push:{"students":obj}},{upsert:true});
+    console.log(ack);
+   res.json("done");
+})
 
  /**
  * -------------- GET ROUTES ----------------
@@ -124,7 +181,12 @@ router.get('/', async(req, res, next) => {
 // student dashboard
 
 router.get("/studentDashboard",async(req,res)=>{
-    res.send("<h1>success</h1>")
+    res.send("<h1>student dashboard</h1>")
+})
+
+// teacher dashboard
+router.get("/teacherDashboard",async(req,res)=>{
+    res.send("<h1>teacher dashboard</h1>");
 })
 
 router.get("/register-teacher", async(req,res)=>{
@@ -174,10 +236,10 @@ router.get("/register-admin",(req,res,next)=>{
  * 
  * Also, look up what behaviour express session has without a maxage set
  */
-router.get('/protected-route',isAuth, (req, res, next) => {
+router.get('/protected-route',isAdmin, (req, res, next) => {
     
     // This is how you check if a user is authenticated and protect a route.  You could turn this into a custom middleware to make it less redundant
-    if (req.isAuthenticated()) {
+    if (req.isAdmin()) {
         // if(req.session.passport.user property exist then user will be authenticated otherwise not)
         res.send('<h1>You are authenticated</h1><p><a href="/logout">Logout and reload</a></p>');
     } else {
