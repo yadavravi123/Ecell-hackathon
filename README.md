@@ -1,6 +1,6 @@
 # Ecell-hackathon
 
-Assignment grading and management system.
+# Assignment grading and management system.
 
 # The Problem in Educational Institutions:
 1. Inefficient Assignment Submission
