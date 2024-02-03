@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Graphs</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Render a separate canvas element for each graph -->
+    <% data.forEach(chartData => { %>
+        <h2><%= chartData.subject %></h2>
+        <div style="height: 20em; width: 20em;">    <canvas id="<%= chartData.subject %>-chart" width="10" height="10"></canvas></div>
+    
+    <% }); %>
+
+    <!-- Include JavaScript code to generate each graph -->
+    <script>
+        // Generate a separate chart for each set of data
+        <% data.forEach(chartData => { %>
+            const ctx_<%= chartData.subject %> = document.getElementById('<%= chartData.subject %>-chart').getContext('2d');
+            const <%= chartData.subject %>Chart = new Chart(ctx_<%= chartData.subject %>, {
+                type: 'bar',
+                data: {
+                    labels: <%- JSON.stringify(chartData.labels) %>,
+                    datasets: [{
+                        label: 'Grades',
+                        data: <%- JSON.stringify(chartData.grades) %>,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)', // Adjust colors as needed
+                        borderColor: 'rgba(54, 162, 235, 1)', // Adjust colors as needed
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        <% }); %>
+    </script>
+</body>
+</html>

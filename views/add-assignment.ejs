@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professional Form</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(to bottom, #1AB7EA, #fff 50%, #0056b3); /* Gradient background with white shade in the center */
+    }
+    .container {
+        width: 400px;
+        background-color: #fff; /* Form background color */
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        text-align: center;
+        color: #1AB7EA; /* Title color */
+        margin-bottom: 30px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333; /* Label color */
+    }
+    input[type="text"],
+    input[type="date"],
+    input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #1AB7EA; /* Button background color */
+        color: #fff; /* Button text color */
+        font-size: 16px;
+        cursor: pointer;
+    }
+    input[type="submit"]:hover {
+        background-color: #0056b3; /* Button background color on hover */
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Add Assignment</h2>
+    <form action="/add-assignment" method="post">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <!-- <input type="text" id="title" name="title" width="20rem" required> -->
+            <textarea name="title" id="" cols="54" rows="8"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="due_date">Due Date:</label>
+            <input type="date" id="due_date" name="due_date" required>
+        </div>
+        <div class="form-group">
+            
+            <input type="hidden" id="subject_name" name="subject_name" value="<%=subject_name%>" required>
+        </div>
+        <div class="form-group">
+            <label for="total_score">Total Score:</label>
+            <input type="number" id="total_score" name="total_score" required>
+        </div>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
+</body>
+</html>
