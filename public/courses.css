@@ -1,0 +1,35 @@
+.f-h{
+  padding:1% 1%;
+  display:inline-block;
+}
+.phto{
+padding-left:500px;
+padding-bottom:100px;
+}
+.room{
+  text-align:center;
+  color:#0c056d;
+}
+.fine{
+  padding-left:10px;
+}
+.text{
+  color:#282846;
+  padding-left:120px;
+}
+.attendance{
+  font-size:16px;
+}
+.lecture{
+  font-size:20px;
+}
+.border-top { border-top: 1px solid #e5e5e5; }
+.border-bottom { border-bottom: 1px solid #e5e5e5; }
+.border-top-gray { border-top-color: #adb5bd; }
+
+.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+
+.lh-condensed { line-height: 1.25; }
+.cir{
+  border-radius: 0.1%;
+}

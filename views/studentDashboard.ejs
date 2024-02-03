@@ -27,7 +27,7 @@
         <nav class="my-2 my-md-0 mr-md-3">
             <a class="p-2 text-dark" href="#">CONTACT US</a>
         </nav>
-        <a class="btn btn-outline-primary" href="/">LOG OUT</a>
+        <a class="btn btn-outline-primary" href="/logout">LOG OUT</a>
     </div>
 
     <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
@@ -37,7 +37,6 @@
     </div>
 
     <div class="container">
-
 
         <% if (subjects.length===0) { %>
             <div class="card-deck mb-3 text-center">
@@ -49,27 +48,48 @@
             </div>
             <% } else { %>
                 <div class="card-deck mb-3 text-center">
-                    <% subjects.forEach(subject=> { %>
-                        <div class="card mb-4 box-shadow">
-                            <div class="card-header">
-                                <h4 class="my-0 font-weight-normal">
-                                    <%= subject.name %>
-                                </h4>
-                            </div>
-                            <div class="card-body">
-                                <h3 class="card-title pricing-card-title"><small class="text-muted">Instructor: <%=
-                                            subject.teachName %></small></h3>
-                                <ul class="list-unstyled mt-3 mb-4">
-                                    <li>Course by MANIT</li>
-                                    <li>No Recent Post</li>
-                                    <li>No Exam</li>
-                                </ul>
-                                <form action="/open_subject/<%= subject.name %>" method="post">
-                                    <button type="submit" class="btn btn-lg btn-block btn-primary">Open</button>
-                                </form>
-                            </div>
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-header">
+                            <h4 class="my-0 font-weight-normal">
+                                Join Class
+                            </h4>
                         </div>
-                        <% }) %>
+                        <div class="card-body">
+                            <form action="/join" method="post">
+                                <!-- Input field -->
+                                <div class="form-group">
+                                    
+                                    <input type="text" class="form-control" id="joinCode" name="subject_name"
+                                        placeholder="Enter subject code">
+                                </div>
+
+                                <!-- Join button -->
+                                <button style="margin-top:5.3em" type="submit" class="btn btn-lg btn-block btn-primary">Join</button>
+                            </form>
+                        </div>
+                    </div>
+                    <% for(let i=0;i<subjects.length;i++){ %>
+                        <% const subject=subjects[i]; %>
+                            <div class="card mb-4 box-shadow">
+                                <div class="card-header">
+                                    <h4 class="my-0 font-weight-normal">
+                                        <%= subject.name %>
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <h3 class="card-title pricing-card-title"><small class="text-muted">Instructor: <%=
+                                                teacher[i] %></small></h3>
+                                    <ul class="list-unstyled mt-3 mb-4">
+                                        <li>Course by MANIT</li>
+                                        <li>No Recent Post</li>
+                                        <li>No Exam</li>
+                                    </ul>
+                                    <form action="/open_subject/<%= subject.name %>" method="get">
+                                        <button type="submit" class="btn btn-lg btn-block btn-primary">Open</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <% } %>
                 </div>
                 <% } %>
 

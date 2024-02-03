@@ -4,6 +4,10 @@ const genPassword = require('../lib/passwordUtils').genPassword;
 const connection = require('../config/database')
 const User = connection.models.User;
 const Class=connection.models.Class;
+const Students=connection.models.Students;
+const Assignments=connection.models.Assignments;
+const Teachers=connection.models.Teachers;
+const Subjects=connection.models.Subjects;
 const isAuth=require('./authMiddleware').isAuth;
 const isAdmin=require('./authMiddleware').isAdmin;
 const axios=require("axios");
@@ -16,11 +20,18 @@ const uuid = require('uuid');
  */
 
  // TODO
- router.post('/login',passport.authenticate('local', {
-    successRedirect: '/studentDashboard',
-    failureRedirect: '/login',
-  }),(req,res,next)=>{
-    console.log('kdjfk');
+//  {
+
+//     successRedirect: '/studentDashboard',
+//     failureRedirect: '/login',
+//   }
+ router.post('/login',passport.authenticate('local'),(req,res,next)=>{
+        if(req.user.admin){
+            res.redirect("/teacherDashboard");
+        }
+        else{
+            res.redirect("/studentDashboard");
+        }
   });
 
  // TODO
@@ -71,42 +82,87 @@ const uuid = require('uuid');
 
 router.get("/join/:id",isAuth,async(req,res)=>{
 
-    // const stu_id=req.user._id.toHexString();
-    // const stu_name=req.user.username;
-    // console.log(req.user);
-    // Class.updateOne({"id":req.params.id},{$push:{"student":{"name":stu_name,"id":stu_id}}},{upsert:true}) 
-    // .then((ack)=>{
-    //    console.log(ack);
-    // })
-    // .catch((err)=>{
-    //    console.log(err);
-    // })
+    const stu_id=req.user._id.toHexString();
+    const stu_name=req.user.username;
     console.log(req.user);
-  
-    res.json("ok");
+    Class.updateOne({"id":req.params.id},{$push:{"student":{"name":stu_name,"id":stu_id}}},{upsert:true}) 
+    .then((ack)=>{
+       console.log(ack);
+    })
+    .catch((err)=>{
+       console.log(err);
+    })
+
+    res.json("joined");
    
 })
 
-router.get("/createClass",isAuth,async(req,res)=>{
-    res.render("basicForm.ejs");
+router.get("/createSubject",isAuth,async(req,res)=>{
+    res.render("createSubject.ejs");
 })
+
 // teacher will create a class which will have unique id
 
-router.post("/createClass",isAuth,async(req,res)=>{
-
-    const class_name=req.body.class_name;
-    const classId=uuid.v4();
+router.post("/createSubject",async(req,res)=>{
+   
+    const subject_name=req.body.subject_name;
+    const subject_id=uuid.v4().substring(0,5);
     const teacherName=req.user.username;
-    console.log('teacher',teacherName);
-    const newClass=new Class({
-        id:classId,
-        class_name:class_name,
+    const Teacher=new Teachers({
         teacher_name:teacherName,
-        student:[],
+        teacher_id:req.user.id,
+        subject_name:subject_name,
+        subject_id:subject_id,
+        students:[]
     })
-    const result=await newClass.save();
+    const ack1= await Teacher.save();
+    console.log(ack1);
+    const Subject=new Subjects({
+        subject_name:subject_name,
+        teacher_name:teacherName,
+    })
+    const ack2=await Subject.save();
+    console.log(ack2);
+    res.redirect("teacherDashboard");
+
 })
 
+router.post("/join",isAuth,async(req,res)=>{
+
+    const subject_name=req.body.subject_name;
+    
+    const ob=await Subjects.findOne({subject_name:subject_name});
+  
+    const student_id=req.user._id.toHexString();
+
+    const student_name=req.user.username;
+
+    const ack=await Students.updateOne({student_id:student_id,student_name:student_name},{$push:{"Subjects":{name:subject_name,id:subject_name}}},{upsert:true});
+   
+    const ack2=await Teachers.updateOne({subject_name:subject_name},{$push:{"students":{name:student_name,id:student_id}}},{upsert:true});
+  
+    res.redirect("studentDashboard");
+})
+
+router.get("/post",async(req,res)=>{
+    res.render("post_log_teach.ejs");
+})
+
+router.post("/add-assignment/:subject_name",async(req,res)=>{
+    
+    const sub_name=req.params.subject_name;
+
+    const Assignment=new Assignments({
+        title:"title",
+        due_date:"4.30",
+        grade:"4.5",
+        subject_name:"AI",
+    })
+
+    const ack=await Assignment.save();
+    console.log(ack);
+    res.json("added assignment");
+})
 
  /**
  * -------------- GET ROUTES ----------------
@@ -121,10 +177,18 @@ router.get('/', async(req, res, next) => {
 
 });
 
-// student dashboard
 
-router.get("/studentDashboard",async(req,res)=>{
-    res.send("<h1>success</h1>")
+
+// teacher dashboard
+// res.render('post_log_teach',{course:data,name:currTeacher.fName});
+router.get("/teacherDashboard",async(req,res)=>{
+    const teacherName=req.user.username;
+    const teacher_arr=await Teachers.find({teacher_name:teacherName});
+    const course=[];
+    for(let i=0;i<teacher_arr.length;i++){
+        course.push(teacher_arr[i].subject_name);
+    }
+    res.render("teacherDashboard",{course:course,name:teacherName});
 })
 
 router.get("/register-teacher", async(req,res)=>{
@@ -174,10 +238,10 @@ router.get("/register-admin",(req,res,next)=>{
  * 
  * Also, look up what behaviour express session has without a maxage set
  */
-router.get('/protected-route',isAuth, (req, res, next) => {
+router.get('/protected-route',isAdmin, (req, res, next) => {
     
     // This is how you check if a user is authenticated and protect a route.  You could turn this into a custom middleware to make it less redundant
-    if (req.isAuthenticated()) {
+    if (req.isAdmin()) {
         // if(req.session.passport.user property exist then user will be authenticated otherwise not)
         res.send('<h1>You are authenticated</h1><p><a href="/logout">Logout and reload</a></p>');
     } else {
@@ -217,6 +281,102 @@ router.get('/posts',isAuth,async(req,res,next)=>{
         console.log(`error while getting posts`);
     }
 })
+
+router.post("/teachersubject",async(req,res)=>{
+    const teacher_name=req.body.teacher_name;
+    const subject_name=req.body.subject_name;
+    const student_arr=[];
+    var temp=await Teachers.findOne({teacher_name:teacher_name,subject_name:subject_name});
+     temp=temp.students;
+    for(let i=0;i<temp.length;i++){
+        student_arr.push(temp[i]);
+    }
+    console.log(student_arr);
+    res.render("subject_student.ejs",{student_arr:student_arr,teacher_name:teacher_name,subject_name:subject_name});
+    // res.render("subject_student.ejs");
+    // res.json("ok");
+   
+})
+
+// student dashboard
+
+router.get('/studentDashboard', async (req, res) => {
+    try {
+       
+        const student_name=req.user.username;
+        const student = await Students.findOne({student_name:student_name});
+        const teacher=[];
+        const subjects=student.Subjects;
+        for(let i=0;i<subjects.length;i++){
+            const sub_name=subjects[i].name;
+            const temp=await Subjects.findOne({subject_name:sub_name});
+            teacher.push(temp.teacher_name);
+        }
+      
+        res.render('studentDashboard', { subjects: student.Subjects, name: student.student_name , teacher:teacher});
+  
+    } catch (error) {
+        console.error('error while showing students subjects');
+    }
+});
+
+router.get("/open_subject/:subject_name",async(req,res)=>{
+        const student_name=req.user.username;
+        const subject_name=req.params.subject_name;
+        
+        res.render("stud_subject.ejs",{subject_name:subject_name});
+})
+
+router.get("/assignment/:subject_name", async(req,res)=>{
+
+        const student_name=req.user.username;
+        const subject_name=req.params.subject_name;
+
+        const assgnment_arr=[];
+        const ass=await Assignments.find({subject_name:subject_name});
+        for(let i=0;i<ass.length;i++){
+            let assignment={
+                title:ass[i].title,
+                due_date:ass[i].due_date,
+                grade:ass[i].grade,
+            }
+            assgnment_arr.push(assignment);
+        }
+        // assgnment_arr contains all assignments of a given subject
+        const data=[];
+        const labels=[];
+
+        for(let i=1;i<=4;i++){
+            labels.push("Ass"+i);
+        }
+        const chartData={
+            subject:subject_name,
+            labels:labels,
+            grades:[9,4,2,7],
+        }
+        data.push(chartData);
+        res.render("graphs.ejs",{data});
+
+})
+router.get("/addAssignment",async(req,res)=>{
+    res.render("addAssignment.ejs");
+})
+router.post("/addAssignment", async(req,res)=>{
+    const assgnment={
+        title:req.body.title,
+        due_date:req.body.due_date,
+        grade:req.body.grade,
+        subject_name:req.body.subject_name,
+    }
+    const Ass=new Assignments(assgnment);
+    const ack=Ass.save();
+    console.log('ack');
+    res.json("added assignment");
+})
+
+
+
+
 
 
 module.exports = router;

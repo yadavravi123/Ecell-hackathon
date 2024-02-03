@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Subject Dashboard</title>
-  <!-- Bootstrap core CSS -->
+  <meta charset="utf-8">
+  <title>Courses</title>
+
+
+
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-  <!-- Font Awesome -->
+  <!-- Bootstrap core CSS -->
   <script defer src="https://pro.fontawesome.com/releases/v5.10.0/js/all.js"
     integrity="sha384-G/ZR3ntz68JZrH4pfPJyRbjW+c0+ojii5f+GYiYwldYU69A+Ejat6yIfLSxljXxD"
     crossorigin="anonymous"></script>
-  <!-- jQuery, Popper.js, Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>
@@ -22,6 +22,10 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
+
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="courses.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       font-family: "Lato", sans-serif;
@@ -64,10 +68,12 @@
       display: flex;
       flex-direction: row;
       height: 90vh;
+
     }
 
     .test {
       font-size: 1em;
+
     }
 
     * {
@@ -75,7 +81,9 @@
       padding: 0;
     }
 
+
     .header {
+
       padding: 15px 20px;
       width: 100%;
       position: fixed;
@@ -99,7 +107,7 @@
       background: #555;
       display: block;
       position: relative;
-      cursor: pointer;
+      coursor: pointer;
     }
 
     .toggle span:before,
@@ -129,6 +137,7 @@
       top: 0;
       transform: rotate(-45deg);
       background: #fff;
+
     }
 
     .toggle span.toggle:after {
@@ -196,6 +205,7 @@
       left: 0;
     }
 
+
     @media screen and (max-height: 450px) {
       .sidenav {
         padding-top: 15px;
@@ -206,9 +216,15 @@
       }
     }
   </style>
+
 </head>
 
 <body>
+
+  <!--="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    -->
+
+
 
   <header class="header">
     <div class="header_in">
@@ -220,22 +236,50 @@
 
   <div class="sidebar" id='sidebar'>
     <ul>
-      <li><a href="/student_dashboard">Dashboard</a></li>
-      <li id="assignments-link"><a href="/assignment/<%=subject_name%>">Assignment</a></li>
-      <form id="assignments-form" action="/assignments" method="POST" style="display: none;">
-       
-      </form>
+      <li><a href="/Post_teach">Dashboard</a></li>
+      <li> <a href="#">
+          <%=subject_name%>
+        </a></li>
+      <li> <a href="#">
+          <%=teacher_name%>
+        </a></li>
+      <li >
+        <form class="" action="/add-assignment/<%=subject_name%>" method="post">
+          <div class="mb-3">
+            <div class="input-group" style="width: 12em; margin-left: 1em; margin-top: 2em;">
+
+              <input type="text" class="form-control" placeholder="title" required name="email" "> 
+              <input type="text" class="form-control" placeholder="due date" required name="email" ">
+              <div class="invalid-feedback" style="width: 100%;">
+                student email id is required.
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-lg btn-block" style="background-color: black; border: none; width: 6em; margin-left: 2em;"
+            type="submit">Add</button>
+        </form>
+      </li>
     </ul>
   </div>
 
-  <div class="container main" style="display: flex; justify-content: center;">
-   
-    </h1>
 
-
+                <!-- Bootstrap core JavaScript
+        ================================================== -->
+                <!-- Placed at the end of the document so the pages load faster -->
+                <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+                  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+                  crossorigin="anonymous"></script>
+                <script>
+                  window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')
+                </script>
+                <script src="../../assets/js/vendor/popper.min.js"></script>
+                <script src="../../dist/js/bootstrap.min.js"></script>
+                <script src="../../assets/js/vendor/holder.min.js"></script>
+              </div>
+              <br>
   </div>
 
-  <footer class="text-muted text-center text-small test">
+  <footer class=" text-muted text-center text-small test">
     <p>&copy; 2022-2023 Company Name</p>
     <ul class="list-inline">
       <li class="list-inline-item pts"><a href="#">Privacy</a></li>
@@ -258,10 +302,6 @@
         btnst = true;
       }
     }
-
-    document.getElementById('assignments-link').addEventListener('click', function () {
-      document.getElementById('assignments-form').submit();
-    });
   </script>
 </body>
 
