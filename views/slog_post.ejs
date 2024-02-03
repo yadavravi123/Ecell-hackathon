@@ -39,34 +39,41 @@
     <div class="container">
 
 
-        <h1>Welcome to Your Dashboard</h1>
-        <h1>Welcome to Your Dashboard</h1>
-
         <% if (subjects.length===0) { %>
-            <p>No subjects enrolled</p>
+            <div class="card-deck mb-3 text-center">
+                <div class="card mb-4 box-shadow">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">No subjects enrolled</h4>
+                    </div>
+                </div>
+            </div>
             <% } else { %>
-                <h2>Enrolled Subjects</h2>
-                <ul>
+                <div class="card-deck mb-3 text-center">
                     <% subjects.forEach(subject=> { %>
-                        <li>
-                            <%= subject.name %> <!-- Display the name of the subject -->
-                                <ul>
-                                    <% subject.assignments.forEach(assignment=> { %>
-                                        <li>
-                                            <%= assignment.title %> <!-- Display the title of the assignment -->
-                                                <% if (assignment.grade !==null) { %>
-                                                    - Grade: <%= assignment.grade %>
-                                                        <!-- Display the grade if available -->
-                                                        <% } else { %>
-                                                            - Grade: Not graded yet
-                                                            <% } %>
-                                        </li>
-                                        <% }) %>
+                        <div class="card mb-4 box-shadow">
+                            <div class="card-header">
+                                <h4 class="my-0 font-weight-normal">
+                                    <%= subject.name %>
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title pricing-card-title"><small class="text-muted">Instructor: <%=
+                                            subject.teachName %></small></h3>
+                                <ul class="list-unstyled mt-3 mb-4">
+                                    <li>Course by MANIT</li>
+                                    <li>No Recent Post</li>
+                                    <li>No Exam</li>
                                 </ul>
-                        </li>
+                                <form action="/open_subject/<%= subject.name %>" method="post">
+                                    <button type="submit" class="btn btn-lg btn-block btn-primary">Open</button>
+                                </form>
+                            </div>
+                        </div>
                         <% }) %>
-                </ul>
+                </div>
                 <% } %>
+
+
 
 
                     <!-- Bootstrap core JavaScript
