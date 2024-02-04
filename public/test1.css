@@ -1,0 +1,38 @@
+.container {
+  max-width: 1200px;
+}
+
+.border-top { border-top: 1px solid #e5e5e5; }
+.border-bottom { border-bottom: 1px solid #e5e5e5; }
+.border-top-gray { border-top-color: #adb5bd; }
+
+.box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); }
+
+.lh-condensed { line-height: 1.25; }
+.cir{
+  border-radius: 0.1%;
+}
+.hi{
+  position: fixed;
+  right: 3rem;
+}
+.fixed-content {
+    top: 23rem;
+    right: 4rem;
+    bottom:0;
+    position:fixed;
+    overflow-y:scroll;
+    overflow-x:hidden;
+}
+.fixed-time {
+    top: 18rem;
+    right: -4rem;
+    bottom:0;
+    position:fixed;
+    overflow-y:scroll;
+    overflow-x:hidden;
+}
+button{
+  padding: 0;
+  background-color: #dc143c;
+}

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Courses</title>
+
+
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <!-- Bootstrap core CSS -->
+  <script defer src="https://pro.fontawesome.com/releases/v5.10.0/js/all.js"
+    integrity="sha384-G/ZR3ntz68JZrH4pfPJyRbjW+c0+ojii5f+GYiYwldYU69A+Ejat6yIfLSxljXxD"
+    crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="courses.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: "Lato", sans-serif;
+    }
+
+    .sidenav {
+      height: 100%;
+      width: 20em;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: #1AB7EA;
+      overflow-x: hidden;
+      padding-top: 20px;
+    }
+
+    .sidenav a {
+      padding: 6px 8px 6px 16px;
+      text-decoration: none;
+      font-size: 2em;
+      color: #818181;
+      display: block;
+    }
+
+    .pts a {
+      font-size: 1em;
+    }
+
+    .sidenav a:hover {
+      color: #000;
+    }
+
+    .main {
+      margin-left: 180px;
+      /* Same as the width of the sidenav */
+      font-size: 28px;
+      /* Increased text to enable scrolling */
+      padding: 5px 10px;
+      display: flex;
+      flex-direction: row;
+      height: 90vh;
+
+    }
+
+    .test {
+      font-size: 1em;
+
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+
+    .header {
+
+      padding: 15px 20px;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9;
+    }
+
+    .header button {
+      background: transparent;
+      border: none;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      outline: 0;
+    }
+
+    .toggle span {
+      width: 100%;
+      height: 3px;
+      background: #555;
+      display: block;
+      position: relative;
+      coursor: pointer;
+    }
+
+    .toggle span:before,
+    .toggle span:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #555;
+      transition: all 0.3s ease-out;
+    }
+
+    .toggle span:before {
+      top: -8px;
+    }
+
+    .toggle span:after {
+      top: 8px;
+    }
+
+    .toggle span.toggle {
+      background: transparent;
+    }
+
+    .toggle span.toggle:before {
+      top: 0;
+      transform: rotate(-45deg);
+      background: #fff;
+
+    }
+
+    .toggle span.toggle:after {
+      top: 0;
+      transform: rotate(45deg);
+      background: #fff;
+    }
+
+    .sidebar {
+      background: #1AB7EA;
+      width: 235px;
+      position: fixed;
+      top: 0;
+      left: -235px;
+      height: 100%;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      padding-top: 90px;
+      transition: all 0.3s ease-out;
+    }
+
+    .sidebar ul {
+      list-style: none;
+    }
+
+    .sidebar ul li {
+      display: block;
+    }
+
+    .sidebar ul li a {
+      padding: 8px 15px;
+      font-size: 20px;
+      color: #222;
+      font-family: arial;
+      text-decoration: none;
+      display: block;
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease-out;
+      font-weight: 500;
+    }
+
+    .sidebar ul li a:before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      right: 50%;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 1px;
+      background: #fff;
+      z-index: -1;
+      transition: all 0.3s ease-out;
+    }
+
+    .sidebar ul li a:hover:before {
+      width: 100%;
+    }
+
+    .sidebar ul li a:hover {
+      color: #fff;
+    }
+
+    .sidebarshow {
+      left: 0;
+    }
+
+
+    @media screen and (max-height: 450px) {
+      .sidenav {
+        padding-top: 15px;
+      }
+
+      .sidenav a {
+        font-size: 15px;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!--="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    -->
+
+
+
+  <header class="header">
+    <div class="header_in">
+      <button type="button" class="toggle" id="toggle">
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <div class="sidebar" id='sidebar'>
+    <ul>
+      <li><a href="/Post_teach">Dashboard</a></li>
+      <li> <a href="#">
+          <%=course.name%>
+        </a></li>
+      <li> <a href="#">
+          <%=course.teachName%>
+        </a></li>
+      <li >
+        <form class="" action="/course" method="post">
+          <div class="mb-3">
+            <div class="input-group" style="width: 12em; margin-left: 1em; margin-top: 2em;">
+
+              <input type="text" class="form-control" placeholder="Add student email-id" required name="email" ">
+              <div class="invalid-feedback" style="width: 100%;">
+                student email id is required.
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-lg btn-block" style="background-color: black; border: none; width: 6em; margin-left: 2em;"
+            type="submit">Add</button>
+        </form>
+      </li>
+    </ul>
+  </div>
+
+
+
+  <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
+  <div class="main">
+    <br>
+    <% if(message==="Sucess" ||message==="Your test was created" ) {%>
+      <div class="alert alert-success" id="div" role="alert">
+        <span id="check">
+          <%=message%>
+        </span>
+      </div>
+      <br>
+      <% }%>
+        <% if(message==="No student found" || message==="already registered" ) {%>
+          <div class="alert alert-danger" id="div" role="alert">
+            <span id="check">
+              <%=message%>
+            </span>
+          </div>
+          <br>
+          <% }%>
+            <%var n=Test.length%>
+              <!-- <% if(n===0) {%>
+      <div class="alert alert-danger" id="div" role="alert">
+          <span id="check" >You have not created any test at present</span>
+      </div>
+    <%}%> -->
+              <!-- <p class="text"><i class="far fa-calendar-check"></i> <a href="#"> Calendar</a> <i class="fas fa-list-ol fine"></i> <a href="#">To-do</a></p> -->
+              <div class="container">
+
+
+                <div class="row">
+
+                  <div class="container">
+                    <%for (var i=0 in Test) {%>
+                      <div class="col-md-8 order-md-1">
+                        <div class="my-3 p-3 bg-white rounded box-shadow cir">
+                          <%var j=parseInt(i, 10)+1%>
+                            <h3>Test no. <%=j%>
+                            </h3>
+                            <% if(Test[i].Smin>9) {%>
+                              <h3>Test is Secheduled on today at <%=Test[i].Shour%>:<%=Test[i].Smin%> of duration
+                                    <%=Test[i].Durhour%> hours and <%=Test[i].Durmin%> minutes</h3>
+                              <%}%>
+                                <% if(Test[i].Smin<10) {%>
+                                  <h3>Test is Secheduled on today at <%=Test[i].Shour%>:0<%=Test[i].Smin%> of duration
+                                        <%=Test[i].Durhour%> hours and <%=Test[i].Durmin%> minutes</h3>
+                                  <%}%>
+                                    <p class="attendance">The link of test is attached below:</p>
+                                    <form class="" action="/4" method="post">
+                                      <button type="submit" class="btn btn-lg btn-outline-primary" name="number"
+                                        value="<%=''+i%>">OPEN</button>
+                                    </form>
+                        </div>
+
+                      </div>
+                      <%}%>
+                  </div>
+
+
+                </div>
+
+
+
+                <!-- Bootstrap core JavaScript
+        ================================================== -->
+                <!-- Placed at the end of the document so the pages load faster -->
+                <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+                  integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+                  crossorigin="anonymous"></script>
+                <script>
+                  window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')
+                </script>
+                <script src="../../assets/js/vendor/popper.min.js"></script>
+                <script src="../../dist/js/bootstrap.min.js"></script>
+                <script src="../../assets/js/vendor/holder.min.js"></script>
+              </div>
+              <br>
+  </div>
+
+  <footer class=" text-muted text-center text-small test">
+    <p>&copy; 2022-2023 Company Name</p>
+    <ul class="list-inline">
+      <li class="list-inline-item pts"><a href="#">Privacy</a></li>
+      <li class="list-inline-item pts"><a href="#">Terms</a></li>
+      <li class="list-inline-item pts"><a href="#">Support</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    var btn = document.querySelector('.toggle');
+    var btnst = true;
+    btn.onclick = function () {
+      if (btnst == true) {
+        document.querySelector('.toggle span').classList.add('toggle');
+        document.getElementById('sidebar').classList.add('sidebarshow');
+        btnst = false;
+      } else if (btnst == false) {
+        document.querySelector('.toggle span').classList.remove('toggle');
+        document.getElementById('sidebar').classList.remove('sidebarshow');
+        btnst = true;
+      }
+    }
+  </script>
+</body>
+
+</html>

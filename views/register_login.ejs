@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: #E0F4FF;
+        }
+        .container{
+            /* background-color: yellow; */
+            display: flex;
+            justify-content: center;
+            
+        }
+        form{
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin:1rem 400px;
+            padding:4rem;
+            border-radius: 4%;
+        }
+        .item{
+           margin: 1rem 0;
+            align-self: flex-start;
+        }
+        button{
+            background-color: #3D30A2;
+            color:white;
+            padding:0.6rem 1.7rem;
+            align-self: flex-start;
+            border-radius: 5%;
+            border-color:#3D30A2 ;
+            font-size: large;
+        }
+        button:hover{
+            background-color: black;
+            border-color: black;
+        }
+        label{
+            font-size: large;
+        }
+        input{
+            height: 1.3rem;
+            /* padding:4px; */
+        }
+        
+    </style>
+    
+</head>
+<body>
+        <%if(type==="register-admin"){%>
+            <h1 style="text-align: center; margin-top:5rem;">Register as Admin</h1>
+        <%}else{%>
+        <h1 style="text-align: center; margin-top:5rem;"><%=type[0].toUpperCase()+type.slice(1)%></h1>
+        <%}%>
+        <div class="container">
+            <form action="/<%=type%>" method="post">
+                <div class="item">
+                <label for="username">username : </label>
+
+                <input style="width: auto;" type="text" name="username" id="">
+                </div>
+                <div class="item">
+                <label for="password">password  : </label>
+
+                
+                <input type="text" name="password" id="">
+                </div>
+                <div class="item">
+                    <%if(type==="register-admin"){%>
+                        <button type="submit">Register</button>
+                    <%}else{%>
+                    <button type="submit"><%=type%></button>
+                    <%}%>
+                    
+                </div>
+                <%if(type==="login"){%>
+                    <a style="text-align:end; text-decoration: none; font-size: large;" href="/register">register</a>
+                <%}%>
+                <%if(type==="register"){%>
+                    <a style="text-align:end; text-decoration: none; font-size: large;" href="/login">login</a>
+                <%}%>
+
+            </form>
+        </div>
+</body>
+</html>
