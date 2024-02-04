@@ -6,6 +6,10 @@ const User = connection.models.User;
 const Class=connection.models.Class;
 const Students=connection.models.Students;
 const Assignments=connection.models.Assignments;
+
+const Submitted=connection.models.Submitted;
+const NSubmitted=connection.models.NSubmitted;
+
 const Teachers=connection.models.Teachers;
 const Subjects=connection.models.Subjects;
 const isAuth=require('./authMiddleware').isAuth;
@@ -108,7 +112,8 @@ router.get("/createSubject",isAuth,async(req,res)=>{
 router.post("/createSubject",async(req,res)=>{
    
     const subject_name=req.body.subject_name;
-    const subject_id=uuid.v4().substring(0,5);
+    // const subject_id=uuid.v4().substring(0,5);
+    const subject_id=subject_name;
     const teacherName=req.user.username;
     const Teacher=new Teachers({
         teacher_name:teacherName,
@@ -295,13 +300,14 @@ router.get('/studentDashboard', async (req, res) => {
         const student = await Students.findOne({student_name:student_name});
         // console.log('student',student);
         const teacher=[];
+        console.log('stu',student.Subjects);
         const subjects=student.Subjects;
         for(let i=0;i<subjects.length;i++){
             const sub_name=subjects[i].name;
             const temp=await Subjects.findOne({subject_name:sub_name});
             teacher.push(temp.teacher_name);
         }
-        
+       
         res.render('studentDashboard', { subjects: student.Subjects, name: student.student_name , teacher:teacher});
   
     } catch (error) {
@@ -315,7 +321,41 @@ router.get("/open_subject/:subject_name",async(req,res)=>{
 
         const assignment_arr=await Assignments.find({subject_name:subject_name});
 
-        res.render("stud_subject.ejs",{subject_name:subject_name,assignment_arr:assignment_arr});
+        const sm_arr=await Submitted.find({student_name:student_name,subject_name:subject_name});
+        const nsm_arr=await NSubmitted.find({student_name:student_name,subject_name:subject_name});
+        const sub_arr=[];
+        const nsub_arr=[];
+        for(let i=0;i<nsm_arr.length;i++){
+            let ass_id=nsm_arr[i].ass_id;
+            const ass=await Assignments.findOne({ass_id:ass_id});
+            // console.log('ass',ass);
+            const assn={
+                ass_id:ass.ass_id,
+                title:ass.title,
+                due_date:ass.due_date,
+                total_score:ass.total_score,
+                subject_name:ass.subject_name,
+            }
+            nsub_arr.push(assn);
+        }
+
+        for(let i=0;i<sm_arr.length;i++){
+            let ass_id=sm_arr[i].ass_id;
+            const ass=await Assignments.findOne({ass_id:ass_id});
+            // console.log('ass',ass);
+            const assn={
+                ass_id:ass.ass_id,
+                title:ass.title,
+                due_date:ass.due_date,
+                total_score:ass.total_score,
+                subject_name:ass.subject_name,
+            }
+            sub_arr.push(assn);
+        }
+
+        
+        res.render("stud_subject.ejs",{subject_name:subject_name,sub_arr:sub_arr,nsub_arr:nsub_arr});
+
 })
 
 router.get("/assignment/:subject_name", async(req,res)=>{
@@ -354,16 +394,32 @@ router.get("/add-assignment/:subject_name",async(req,res)=>{
     res.render("add-assignment.ejs",{subject_name:req.params.subject_name});
 })
 router.post("/add-assignment", async(req,res)=>{
-
+    let uid=uuid.v4().substring(0,3);
     const assgnment={
+        ass_id:uid,
         title:req.body.title,
         due_date:req.body.due_date,
         total_score:req.body.total_score,
         subject_name:req.body.subject_name,
     }
     const Ass=new Assignments(assgnment);
-    const ack=Ass.save();
-  
+    const ack=await Ass.save();
+    // console.log('ack',ack);
+   
+    const tobj=await Teachers.find({subject_name:req.body.subject_name,teacher_name:req.user.username});
+ 
+    const stu_arr=tobj[0].students;
+    for(let i=0;i<stu_arr.length;i++){
+        const nsm={
+            student_name:stu_arr[i].name,
+            ass_id:uid,
+            subject_name:req.body.subject_name,
+        }
+        const nnsm=new NSubmitted(nsm);
+        const ack=await nnsm.save();
+       
+    }
+
 
     const teacher_name=req.user.username;
     const subject_name=req.body.subject_name;
@@ -375,16 +431,27 @@ router.post("/add-assignment", async(req,res)=>{
     }
    
     const assignment_arr=await Assignments.find({subject_name:subject_name});
-    console.log(assignment_arr);
+    // console.log(assignment_arr);
 
     res.render("subject_student.ejs",{student_arr:student_arr,teacher_name:teacher_name,subject_name:subject_name,assignment_arr:assignment_arr});
 
 })
 
 router.post("/submit-ass", async(req,res)=>{
-    console.log(req.body.file_input);
+        const student_name=req.user.username;
+        const subject_name=req.body.subject_name;
+        const ass_id=req.body.ass_id;
+        const ass=await Assignments.findOne({ass_id:ass_id});
+        const asgn={
+            ass_id:ass_id,
+            subject_name:ass.subject_name,
+            student_name:student_name
+        }
+        const ASS=new Submitted(asgn);
+        const ack2=await ASS.save();
+        const ack3=await NSubmitted.deleteOne({subject_name:subject_name,student_name:student_name,ass_id:ass_id});
     
-    
+        res.redirect(`/open_subject/${subject_name}`);
 })
 
 
