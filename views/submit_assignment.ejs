@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Assignments</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #1AB7EA, #fff 50%, #0056b3);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            /* Use a professional font */
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            /* Limit the width of the form */
+            width: 100%;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            /* Darken the color for better contrast */
+            margin-bottom: 30px;
+            margin-left: 1em;
+            /* Add some space below the heading */
+        }
+
+        label {
+            font-weight: bold;
+            /* Make labels bold */
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            background-color: #1AB7EA;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0e8ab1;
+            /* Darken the color on hover */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Submit Assignments</h1>
+        <form action="/submitAssignment" method="POST">
+            <label for="text1">Assignment 1:</label><br>
+            <input type="file" id="text1" name="assignment">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+
+</html>
